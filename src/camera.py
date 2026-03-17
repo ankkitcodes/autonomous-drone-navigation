@@ -1,5 +1,6 @@
 import cv2
 from obstacle_detection import detect_obstacles
+from navigation import decide_movement
 
 def start_camera():
 
@@ -11,7 +12,19 @@ def start_camera():
         if not ret:
             break
 
+        frame_height, frame_width, _ = frame.shape
+
         detections = detect_obstacles(frame)
+
+        move = decide_movement(detections, frame_width)
+
+        # Show movement decision
+        cv2.putText(frame, f"MOVE: {move}",
+                    (20, 40),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 0, 255),
+                    2)
 
         # Draw detections
         for det in detections:
@@ -26,6 +39,10 @@ def start_camera():
                         0.5,
                         (0,255,0),
                         2)
+
+        # Draw region lines
+        cv2.line(frame, (frame_width//3, 0), (frame_width//3, frame_height), (255,0,0), 2)
+        cv2.line(frame, (2*frame_width//3, 0), (2*frame_width//3, frame_height), (255,0,0), 2)
 
         cv2.imshow("Drone Camera - YOLO", frame)
 

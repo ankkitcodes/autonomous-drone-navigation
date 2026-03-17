@@ -26,8 +26,9 @@ Gazebo
 
 ## Progress
 
-✔ Camera feed working  
-✔ YOLO object detection integrated  
-⬜ Navigation logic  
+✔ Camera feed  
+✔ YOLO detection  
+✔ Navigation logic (basic AI decision making)  
 ⬜ Drone control  
-⬜ ROS integration
+⬜ ROS integration  
+⬜ Simulation
