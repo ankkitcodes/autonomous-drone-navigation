@@ -23,3 +23,11 @@ OpenCV
 YOLOv8  
 ROS  
 Gazebo
+
+## Progress
+
+✔ Camera feed working  
+✔ YOLO object detection integrated  
+⬜ Navigation logic  
+⬜ Drone control  
+⬜ ROS integration
