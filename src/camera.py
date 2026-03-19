@@ -1,10 +1,13 @@
 import cv2
+import numpy as np
 from obstacle_detection import detect_obstacles
 from navigation import decide_movement
+from drone_controller import Drone
 
 def start_camera():
 
     cap = cv2.VideoCapture(0)
+    drone = Drone()
 
     while True:
         ret, frame = cap.read()
@@ -17,6 +20,27 @@ def start_camera():
         detections = detect_obstacles(frame)
 
         move = decide_movement(detections, frame_width)
+
+        drone.move(move)
+        x, y = drone.get_position()
+
+        # Create simulation canvas
+        sim = 255 * np.ones((500, 500, 3), dtype=np.uint8)
+
+        # Draw obstacles
+        cv2.rectangle(sim, (200,200), (300,300), (0,255,0), -1)
+
+        # Draw drone
+        cv2.circle(sim, (x, y), 10, (0, 0, 255), -1)
+
+        cv2.putText(sim, f"Move: {move}",
+                    (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7,
+                    (0,0,0),
+                    2)
+
+        cv2.imshow("Drone Simulation", sim)
 
         # Show movement decision
         cv2.putText(frame, f"MOVE: {move}",

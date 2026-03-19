@@ -28,7 +28,7 @@ Gazebo
 
 ✔ Camera feed  
 ✔ YOLO detection  
-✔ Navigation logic (basic AI decision making)  
-⬜ Drone control  
+✔ Navigation logic  
+✔ Drone movement simulation  
 ⬜ ROS integration  
-⬜ Simulation
+⬜ Gazebo simulation
