@@ -3,23 +3,47 @@ def decide_movement(detections, frame_width):
     if not detections:
         return "FORWARD"
 
-    # choose biggest box (closest object)
-    largest = max(detections, key=lambda d: (d["bbox"][2]-d["bbox"][0]) * (d["bbox"][3]-d["bbox"][1]))
+    # Select the largest detected obstacle
+    obstacle = max(
+        detections,
+        key=lambda d: d["area"]
+    )
 
-    x1, y1, x2, y2 = largest["bbox"]
-    center = (x1 + x2) // 2
+    x1, y1, x2, y2 = obstacle["bbox"]
 
-    # Safety distance check
-    area = (x2 - x1) * (y2 - y1)
-    if area > 50000:
-        return "BACKWARD"
+    center_x = (x1 + x2) // 2
 
-    left_zone = frame_width // 3
-    right_zone = 2 * frame_width // 3
+    left_boundary = frame_width // 3
+    right_boundary = 2 * frame_width // 3
 
-    if center < left_zone:
-        return "RIGHT"
-    elif center > right_zone:
-        return "LEFT"
-    else:
-        return "STOP"
+    proximity = obstacle["proximity"]
+
+    # Far obstacle → continue forward
+    if proximity == "FAR":
+        return "FORWARD"
+
+    # Medium obstacle → begin avoiding
+    if proximity == "MEDIUM":
+
+        if center_x < left_boundary:
+            return "RIGHT"
+
+        elif center_x > right_boundary:
+            return "LEFT"
+
+        else:
+            return "STOP"
+
+    # Close obstacle → immediate avoidance
+    if proximity == "CLOSE":
+
+        if center_x < left_boundary:
+            return "RIGHT"
+
+        elif center_x > right_boundary:
+            return "LEFT"
+
+        else:
+            return "BACKWARD"
+
+    return "STOP"
